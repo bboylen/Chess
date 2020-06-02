@@ -28,17 +28,19 @@ class Board
   end
 
   def assign_pieces(white,black)
-    @board.each_with_index do |row,index|
-      if index == 0 || index == 1
-        row.each do |piece| 
+    @board.each_with_index do |row,row_index|
+      if row_index == 0 || row_index == 1
+        row.each_with_index do |piece, column_index| 
           piece.color = "black"
           piece.set_symbol
+          piece.position = [row_index, column_index]
           black.pieces << piece
         end
-      elsif index == 6 || index == 7
-        row.each do |piece| 
+      elsif row_index == 6 || row_index == 7
+        row.each_with_index do |piece, column_index| 
           piece.color = "white"
           piece.set_symbol
+          piece.position = [row_index, column_index]
           white.pieces << piece
         end
       end
@@ -88,6 +90,7 @@ class Board
 
   def move(initial_position, end_position)
     @board[end_position[0]][end_position[1]] = @board[initial_position[0]][initial_position[1]]
+    @board[initial_position[0]][initial_position[1]].moves_made += 1
     @board[initial_position[0]][initial_position[1]] = nil
   end
 

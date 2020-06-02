@@ -1,5 +1,5 @@
 class Piece
-  attr_accessor :moves_made, :symbol, :color
+  attr_accessor :moves_made, :symbol, :color, :position
   
 
   def initialize
@@ -40,7 +40,6 @@ private
   def pawn_capture(position, board)
     enemy_location = []
     move_set = []
-    # WHY IS ENEMY LOCATION += AND NOT SHOVEL 
     if @color == "white"
       enemy_location = [position[0] - 1, position[1] - 1]
       if board.board[enemy_location[0]][enemy_location[1]]

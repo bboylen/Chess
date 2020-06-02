@@ -6,6 +6,7 @@ class Game
     @white = board.white
     @black = board.black
     @turn = @white
+    @not_turn = @black
   end
 
   def new
@@ -21,14 +22,15 @@ class Game
     puts "Where do you want to move it?"
     piece_destination = choose_destination(piece_choice)
     @board.move(piece_choice, piece_destination)
-    puts puts puts
-    @board.display
-    if @turn = @white
-      @turn = @black
-    else
-      @turn = @white
-    end
-    #remove piece from player pieces array?
+    puts puts 
+    print @white.pieces
+    puts
+    print @black.pieces
+    #check?
+    # Need to update position of the piece that is moved
+    #Need to remove piece from player pieces array
+    @turn, @not_turn = @not_turn, @turn
+    play_round
   end
 
   def choose_piece
@@ -37,7 +39,7 @@ class Game
       puts
       puts "Please select a #{@turn.team} piece."
       choice_string = gets.chomp
-      choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]] ]
+      choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
       piece = @board.board[choice[0]][choice[1]]
       if piece
         choice_valid = true if piece.color == @turn.team && piece.move_set(choice,board).empty? == false
@@ -52,6 +54,10 @@ class Game
       choice_string = gets.chomp
       choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]] ]
       choice_valid = true if @board.board[piece_choice[0]][piece_choice[1]].move_set(piece_choice, board).include?(choice)
+    end
+    @board.board[piece_choice[0]][piece_choice[1]].position = choice
+    if @board.board[choice[0]][choice[1]] != nil
+      @not_turn.pieces.delete(@board.board[choice[0]][choice[1]])
     end
     choice
   end
