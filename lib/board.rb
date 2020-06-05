@@ -6,6 +6,8 @@ class Board
     @white = Player.new('white')
     @black = Player.new('black')
     assign_pieces(@white,@black)
+    @white_king = @white.pieces.select {|piece| piece.instance_of?(King)}
+    @black_king = @black.pieces.select {|piece| piece.instance_of?(King)}
     @column_hash = {"A" => 0, "B" => 1, "C" => 2, "D" => 3, 
       "E" => 4, "F" => 5, "G" => 6, "H" => 7}
     @row_hash = {"8" => 0, "7" => 1, "6" => 2, "5" => 3, 
@@ -93,5 +95,31 @@ class Board
     @board[initial_position[0]][initial_position[1]].moves_made += 1
     @board[initial_position[0]][initial_position[1]] = nil
   end
+
+  def check?(king_position, enemy_pieces)
+    enemy_pieces.each do |piece|
+      return true if piece.move_set(piece.position, self).include?(king_position)
+    end
+    false
+  end
+  
+  def check_mate?(king_position, current_player, enemy_player, board)
+    current_player.pieces.each do |piece|
+      piece.move_set(piece.position, board).each do |end_position|
+        test_board = board.dup
+        test_current_player = current_player.dup
+        test_enemy_player = enemy_player.dup
+        #piece_to_be_deleted = test_board[end_position[0]][end_position[1]]
+        test_board.board[end_position[0]][end_position[1]] = piece
+        test_board.board[piece.position[0]][piece.position[1]] = nil
+        test_current_player.king.position = [end_position[0],end_position[1]] if piece.instance_of?(King)
+        #Dont need to update current position for enemy player?
+        binding.pry
+        return true if test_board.check?(test_current_player.king.position, test_enemy_player.pieces)
+      end
+    end
+    false
+  end
+  
 
 end

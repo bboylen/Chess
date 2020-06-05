@@ -5,11 +5,14 @@ class Game
     @board = board
     @white = board.white
     @black = board.black
+    @white.king = @white.pieces.select {|piece| piece.instance_of?(King)}[0]
+    @black.king = @black.pieces.select {|piece| piece.instance_of?(King)}[0]
     @turn = @white
     @not_turn = @black
   end
 
   def new
+    puts puts
     puts "Welcome, to move please enter the space containing the piece you wish to move (e.g. A4), hit ENTER, then choose the destination"
     puts "White will begin"
     puts puts
@@ -18,17 +21,18 @@ class Game
 
   def play_round
     @board.display
+    if board.check_mate?(@turn.king.position, @turn, @not_turn, @board)
+    #  need to break out of this play_round function call
+      puts "FDSDFSD"
+      game_over
+    end
+    if board.check?(@turn.king.position, @not_turn.pieces)
+      puts
+      puts "You are in check"
+    end
     piece_choice = choose_piece
-    puts "Where do you want to move it?"
     piece_destination = choose_destination(piece_choice)
-    @board.move(piece_choice, piece_destination)
     puts puts 
-    print @white.pieces
-    puts
-    print @black.pieces
-    #check?
-    # Need to update position of the piece that is moved
-    #Need to remove piece from player pieces array
     @turn, @not_turn = @not_turn, @turn
     play_round
   end
@@ -41,24 +45,46 @@ class Game
       choice_string = gets.chomp
       choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
       piece = @board.board[choice[0]][choice[1]]
+      binding.pry
       if piece
         choice_valid = true if piece.color == @turn.team && piece.move_set(choice,board).empty? == false
+      end
+    end
+    #NEED TO ADD CHECK CHECK
+    choice
+  end
+
+  def choose_destination(piece_choice)
+    puts "Where do you want to move it?"
+    choice_valid = false
+    starting_king_position = @turn.king.position
+    piece_moving = @board.board[piece_choice[0]][piece_choice[1]]
+    while !choice_valid
+      choice_string = gets.chomp
+      choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
+      piece_captured = @board.board[choice[0]][choice[1]]
+      if piece_moving.move_set(piece_choice, board).include?(choice)
+        @board.board[choice[0]][choice[1]] = piece_moving
+        piece_moving.position = choice
+        if board.check?(@turn.king.position,@not_turn.pieces)
+          puts "Move invalid. Would place King in Check."
+          @turn.king.position = starting_king_position
+          @board.board[choice[0]][choice[1]] = piece_captured
+          piece_choice = choose_piece
+          piece_captured = choose_destination(piece_choice)
+          choice_valid = true
+        else
+          choice_valid = true
+          @board.board[piece_choice[0]][piece_choice[1]] = nil
+          @not_turn.pieces.delete(piece_captured)
+          piece_moving.moves_made += 1
+        end
       end
     end
     choice
   end
 
-  def choose_destination(piece_choice)
-    choice_valid = false
-    while !choice_valid
-      choice_string = gets.chomp
-      choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]] ]
-      choice_valid = true if @board.board[piece_choice[0]][piece_choice[1]].move_set(piece_choice, board).include?(choice)
-    end
-    @board.board[piece_choice[0]][piece_choice[1]].position = choice
-    if @board.board[choice[0]][choice[1]] != nil
-      @not_turn.pieces.delete(@board.board[choice[0]][choice[1]])
-    end
-    choice
+  def game_over
   end
+
 end

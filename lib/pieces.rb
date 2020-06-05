@@ -28,10 +28,7 @@ class Pawn < Piece
       move_set += [[position[0] + 1, position[1]]] if @color == "black"
     end
     move_set.delete_if {|tile| board.occupied?(tile) || board.out_of_bounds?(tile)}
-
     move_set += pawn_capture(position,board)
-    #move_set.delete_if {|tile| board.out_of_bounds?(tile)}
-    #print move_set
     move_set
   end
 
