@@ -7,9 +7,16 @@ require_relative 'game.rb'
 
 board = Board.new
 game = Game.new(board)
-#board.board[0][6].move_set([0,6],board)
-#board.board[2][0] = board.board[7][4]
-#board.board[2][0].move_set([2,0],board)
+board.board[3][3] = board.board[0][4]
+board.board[0][4] = nil
+board.board[3][3].position = [3,3]
+board.board[3][4] = board.board[7][3]
+board.board[7][3] = nil
+board.board[3][4].position = [3,4]
+#board.board[3][2] = board.board[7][0]
+#board.board[7][0] = nil
+#board.board[3][2].position = [3,2]
+
 game.new
 
 

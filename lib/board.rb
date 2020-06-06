@@ -104,20 +104,26 @@ class Board
   end
   
   def check_mate?(king_position, current_player, enemy_player, board)
+    check_array = []
     current_player.pieces.each do |piece|
       piece.move_set(piece.position, board).each do |end_position|
-        test_board = board.dup
-        test_current_player = current_player.dup
-        test_enemy_player = enemy_player.dup
+        test_board = Marshal.load(Marshal.dump(board))
+        test_current_player = Marshal.load(Marshal.dump(current_player.dup))
+        test_enemy_player = Marshal.load(Marshal.dump(enemy_player.dup))
         #piece_to_be_deleted = test_board[end_position[0]][end_position[1]]
         test_board.board[end_position[0]][end_position[1]] = piece
         test_board.board[piece.position[0]][piece.position[1]] = nil
         test_current_player.king.position = [end_position[0],end_position[1]] if piece.instance_of?(King)
         #Dont need to update current position for enemy player?
-        binding.pry
+        #binding.pry
         return true if test_board.check?(test_current_player.king.position, test_enemy_player.pieces)
       end
     end
+    #if check_array.include?(true)
+    #  true
+    #else
+    #  false
+    #end
     false
   end
   

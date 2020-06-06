@@ -21,14 +21,14 @@ class Pawn < Piece
   def move_set(position, board)
     move_set = []
     if @moves_made == 0
-      move_set += [[position[0] - 1, position[1]], [position[0] - 2, position[1]]] if @color == "white"
-      move_set += [[position[0] + 1, position[1]], [position[0] + 2, position[1]]] if @color == "black"
+      move_set += [[@position[0] - 1, @position[1]], [@position[0] - 2, @position[1]]] if @color == "white"
+      move_set += [[@position[0] + 1, @position[1]], [@position[0] + 2, @position[1]]] if @color == "black"
     else 
-      move_set += [[position[0] - 1, position[1]]] if @color == "white"
-      move_set += [[position[0] + 1, position[1]]] if @color == "black"
+      move_set += [[@position[0] - 1, @position[1]]] if @color == "white"
+      move_set += [[@position[0] + 1, @position[1]]] if @color == "black"
     end
     move_set.delete_if {|tile| board.occupied?(tile) || board.out_of_bounds?(tile)}
-    move_set += pawn_capture(position,board)
+    move_set += pawn_capture(@position,board)
     move_set
   end
 
@@ -38,20 +38,20 @@ private
     enemy_location = []
     move_set = []
     if @color == "white"
-      enemy_location = [position[0] - 1, position[1] - 1]
+      enemy_location = [@position[0] - 1, @position[1] - 1]
       if board.board[enemy_location[0]][enemy_location[1]]
         move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "black"
       end
-      enemy_location = [position[0] - 1, position[1] + 1]
+      enemy_location = [@position[0] - 1, @position[1] + 1]
       if board.board[enemy_location[0]][enemy_location[1]]
         move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "black"
       end
     else
-      enemy_location = [position[0] + 1, position[1] - 1]
+      enemy_location = [@position[0] + 1, @position[1] - 1]
       if board.board[enemy_location[0]][enemy_location[1]]
         move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "white"
       end
-      enemy_location = [position[0] + 1, position[1] + 1]
+      enemy_location = [@position[0] + 1, @position[1] + 1]
       if board.board[enemy_location[0]][enemy_location[1]]
         move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "white"
       end
@@ -72,10 +72,10 @@ class Rook < Piece
 
   def move_set(position, board)
     move_set = []
-    move_set += sliding_positions(position, board, [-1,0])
-    move_set += sliding_positions(position, board, [1,0])
-    move_set += sliding_positions(position, board, [0,-1])
-    move_set += sliding_positions(position, board, [0,1])
+    move_set += sliding_positions(@position, board, [-1,0])
+    move_set += sliding_positions(@position, board, [1,0])
+    move_set += sliding_positions(@position, board, [0,-1])
+    move_set += sliding_positions(@position, board, [0,1])
     move_set
   end
 
@@ -83,11 +83,11 @@ class Rook < Piece
     move_set = []
     done = false
     while !done
-      next_position = [position[0] + direction[0], position[1] + direction[1]]
+      next_position = [@position[0] + direction[0], @position[1] + direction[1]]
       break if board.out_of_bounds?(next_position)
       if board.board[next_position[0]][next_position[1]].nil?
         move_set << next_position 
-        position = next_position
+        @position = next_position
       elsif board.occupied?(next_position) && !board.occupied_by_same_team?(next_position, @color)
         move_set << next_position
         done = true
@@ -112,14 +112,14 @@ class Knight < Piece
   end
 
   def move_set(position, board)
-  move_set = [[position[0] + 1, position[1] + 2],
-              [position[0] + 1, position[1] - 2],
-              [position[0] + 2, position[1] + 1],
-              [position[0] + 2, position[1] - 1],
-              [position[0] - 1, position[1] + 2],
-              [position[0] - 1, position[1] - 2],
-              [position[0] - 2, position[1] + 1],
-              [position[0] - 2, position[1] - 1]]
+  move_set = [[@position[0] + 1, @position[1] + 2],
+              [@position[0] + 1, @position[1] - 2],
+              [@position[0] + 2, @position[1] + 1],
+              [@position[0] + 2, @position[1] - 1],
+              [@position[0] - 1, @position[1] + 2],
+              [@position[0] - 1, @position[1] - 2],
+              [@position[0] - 2, @position[1] + 1],
+              [@position[0] - 2, @position[1] - 1]]
   move_set.delete_if {|tile| board.out_of_bounds?(tile)}           
   move_set.delete_if {|tile| board.occupied_by_same_team?(tile, @color)}
   move_set
@@ -138,10 +138,10 @@ class Bishop < Piece
 
   def move_set(position, board)
     move_set = []
-    move_set += sliding_positions(position, board, [-1,-1])
-    move_set += sliding_positions(position, board, [-1,1])
-    move_set += sliding_positions(position, board, [1,-1])
-    move_set += sliding_positions(position, board, [1,1])
+    move_set += sliding_positions(@position, board, [-1,-1])
+    move_set += sliding_positions(@position, board, [-1,1])
+    move_set += sliding_positions(@position, board, [1,-1])
+    move_set += sliding_positions(@position, board, [1,1])
     move_set
   end
 
@@ -149,11 +149,11 @@ class Bishop < Piece
     move_set = []
     done = false
     while !done
-      next_position = [position[0] + direction[0], position[1] + direction[1]]
+      next_position = [@position[0] + direction[0], @position[1] + direction[1]]
       break if board.out_of_bounds?(next_position)
       if board.board[next_position[0]][next_position[1]].nil? 
         move_set << next_position 
-        position = next_position
+        @position = next_position
       elsif board.occupied?(next_position) && !board.occupied_by_same_team?(next_position, @color)
         move_set << next_position
         done = true
@@ -176,14 +176,14 @@ class King < Piece
   end
 
   def move_set(position, board)
-    move_set = [[position[0] + 1, position[1]],
-                [position[0] + 1, position[1] + 1],
-                [position[0] + 1, position[1] - 1],
-                [position[0] - 1, position[1]],
-                [position[0] - 1, position[1] + 1],
-                [position[0] - 1, position[1] - 1],
-                [position[0], position[1] + 1],
-                [position[0], position[1] - 1]]
+    move_set = [[@position[0] + 1, @position[1]],
+                [@position[0] + 1, @position[1] + 1],
+                [@position[0] + 1, @position[1] - 1],
+                [@position[0] - 1, @position[1]],
+                [@position[0] - 1, @position[1] + 1],
+                [@position[0] - 1, @position[1] - 1],
+                [@position[0], @position[1] + 1],
+                [@position[0], @position[1] - 1]]
     move_set.delete_if {|tile| board.out_of_bounds?(tile)}           
     move_set.delete_if {|tile| board.occupied_by_same_team?(tile, @color)}
     move_set
@@ -203,14 +203,14 @@ class Queen < Piece
 
   def move_set(position, board)
     move_set = []
-    move_set += sliding_positions(position, board, [-1,0])
-    move_set += sliding_positions(position, board, [1,0])
-    move_set += sliding_positions(position, board, [0,-1])
-    move_set += sliding_positions(position, board, [0,1])
-    move_set += sliding_positions(position, board, [-1,-1])
-    move_set += sliding_positions(position, board, [-1,1])
-    move_set += sliding_positions(position, board, [1,-1])
-    move_set += sliding_positions(position, board, [1,1])
+    move_set += sliding_positions(@position, board, [-1,0])
+    move_set += sliding_positions(@position, board, [1,0])
+    move_set += sliding_positions(@position, board, [0,-1])
+    move_set += sliding_positions(@position, board, [0,1])
+    move_set += sliding_positions(@position, board, [-1,-1])
+    move_set += sliding_positions(@position, board, [-1,1])
+    move_set += sliding_positions(@position, board, [1,-1])
+    move_set += sliding_positions(@position, board, [1,1])
     move_set
   end
 
@@ -218,11 +218,11 @@ class Queen < Piece
     move_set = []
     done = false
     while !done
-      next_position = [position[0] + direction[0], position[1] + direction[1]]
+      next_position = [@position[0] + direction[0], @position[1] + direction[1]]
       break if board.out_of_bounds?(next_position)
       if board.board[next_position[0]][next_position[1]].nil?
         move_set << next_position 
-        position = next_position
+        @position = next_position
       elsif board.occupied?(next_position) && !board.occupied_by_same_team?(next_position, @color)
         move_set << next_position
         done = true

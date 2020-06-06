@@ -21,10 +21,9 @@ class Game
 
   def play_round
     @board.display
+    #binding.pry
     if board.check_mate?(@turn.king.position, @turn, @not_turn, @board)
-    #  need to break out of this play_round function call
-      puts "FDSDFSD"
-      game_over
+      return game_over
     end
     if board.check?(@turn.king.position, @not_turn.pieces)
       puts
@@ -45,12 +44,11 @@ class Game
       choice_string = gets.chomp
       choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
       piece = @board.board[choice[0]][choice[1]]
-      binding.pry
+      #FIX INPUT CRASH
       if piece
         choice_valid = true if piece.color == @turn.team && piece.move_set(choice,board).empty? == false
       end
     end
-    #NEED TO ADD CHECK CHECK
     choice
   end
 
@@ -85,6 +83,7 @@ class Game
   end
 
   def game_over
+    puts "Game over! #{@not_turn.team} is the winner!"
   end
 
 end
