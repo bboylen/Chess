@@ -1,11 +1,34 @@
 class Piece
   attr_accessor :moves_made, :symbol, :color, :position
   
-
   def initialize
     @moves_made = 0
   end
 
+end
+
+module Sliding_pieces
+
+  def sliding_positions(board, direction)
+    move_set = []
+    position = @position
+    done = false
+    while !done
+      next_position = [position[0] + direction[0], position[1] + direction[1]]
+      break if board.out_of_bounds?(next_position)
+      if board.board[next_position[0]][next_position[1]].nil?
+        move_set << next_position 
+        position = next_position
+      elsif board.occupied?(next_position) && !board.occupied_by_same_team?(next_position, @color)
+        move_set << next_position
+        done = true
+      else 
+        done = true
+      end
+    end
+    move_set
+  end
+  
 end
 
 class Pawn < Piece
@@ -18,7 +41,7 @@ class Pawn < Piece
     end
   end
 
-  def move_set(position, board)
+  def move_set(board)
     move_set = []
     if @moves_made == 0
       move_set += [[@position[0] - 1, @position[1]], [@position[0] - 2, @position[1]]] if @color == "white"
@@ -28,13 +51,13 @@ class Pawn < Piece
       move_set += [[@position[0] + 1, @position[1]]] if @color == "black"
     end
     move_set.delete_if {|tile| board.occupied?(tile) || board.out_of_bounds?(tile)}
-    move_set += pawn_capture(@position,board)
+    move_set += pawn_capture(board)
     move_set
   end
 
 private 
 
-  def pawn_capture(position, board)
+  def pawn_capture(board)
     enemy_location = []
     move_set = []
     if @color == "white"
@@ -61,6 +84,7 @@ private
 end
 
 class Rook < Piece
+  include Sliding_pieces
 
   def set_symbol
     if @color == "black"
@@ -70,31 +94,12 @@ class Rook < Piece
     end
   end
 
-  def move_set(position, board)
+  def move_set(board)
     move_set = []
-    move_set += sliding_positions(@position, board, [-1,0])
-    move_set += sliding_positions(@position, board, [1,0])
-    move_set += sliding_positions(@position, board, [0,-1])
-    move_set += sliding_positions(@position, board, [0,1])
-    move_set
-  end
-
-  def sliding_positions(position, board, direction)
-    move_set = []
-    done = false
-    while !done
-      next_position = [@position[0] + direction[0], @position[1] + direction[1]]
-      break if board.out_of_bounds?(next_position)
-      if board.board[next_position[0]][next_position[1]].nil?
-        move_set << next_position 
-        @position = next_position
-      elsif board.occupied?(next_position) && !board.occupied_by_same_team?(next_position, @color)
-        move_set << next_position
-        done = true
-      else 
-        done = true
-      end
-    end
+    move_set += sliding_positions(board, [-1,0])
+    move_set += sliding_positions(board, [1,0])
+    move_set += sliding_positions(board, [0,-1])
+    move_set += sliding_positions(board, [0,1])
     move_set
   end
 end
@@ -111,7 +116,7 @@ class Knight < Piece
     end
   end
 
-  def move_set(position, board)
+  def move_set(board)
   move_set = [[@position[0] + 1, @position[1] + 2],
               [@position[0] + 1, @position[1] - 2],
               [@position[0] + 2, @position[1] + 1],
@@ -127,6 +132,7 @@ class Knight < Piece
 end
 
 class Bishop < Piece
+  include Sliding_pieces
 
   def set_symbol
     if @color == "black"
@@ -136,31 +142,12 @@ class Bishop < Piece
     end
   end
 
-  def move_set(position, board)
+  def move_set(board)
     move_set = []
-    move_set += sliding_positions(@position, board, [-1,-1])
-    move_set += sliding_positions(@position, board, [-1,1])
-    move_set += sliding_positions(@position, board, [1,-1])
-    move_set += sliding_positions(@position, board, [1,1])
-    move_set
-  end
-
-  def sliding_positions(position, board, direction)
-    move_set = []
-    done = false
-    while !done
-      next_position = [@position[0] + direction[0], @position[1] + direction[1]]
-      break if board.out_of_bounds?(next_position)
-      if board.board[next_position[0]][next_position[1]].nil? 
-        move_set << next_position 
-        @position = next_position
-      elsif board.occupied?(next_position) && !board.occupied_by_same_team?(next_position, @color)
-        move_set << next_position
-        done = true
-      else 
-        done = true
-      end
-    end
+    move_set += sliding_positions(board, [-1,-1])
+    move_set += sliding_positions(board, [-1,1])
+    move_set += sliding_positions(board, [1,-1])
+    move_set += sliding_positions(board, [1,1])
     move_set
   end
 end
@@ -175,7 +162,7 @@ class King < Piece
     end
   end
 
-  def move_set(position, board)
+  def move_set(board)
     move_set = [[@position[0] + 1, @position[1]],
                 [@position[0] + 1, @position[1] + 1],
                 [@position[0] + 1, @position[1] - 1],
@@ -192,6 +179,7 @@ class King < Piece
 end
 
 class Queen < Piece
+  include Sliding_pieces
 
   def set_symbol
     if @color == "black"
@@ -201,35 +189,16 @@ class Queen < Piece
     end
   end
 
-  def move_set(position, board)
+  def move_set(board)
     move_set = []
-    move_set += sliding_positions(@position, board, [-1,0])
-    move_set += sliding_positions(@position, board, [1,0])
-    move_set += sliding_positions(@position, board, [0,-1])
-    move_set += sliding_positions(@position, board, [0,1])
-    move_set += sliding_positions(@position, board, [-1,-1])
-    move_set += sliding_positions(@position, board, [-1,1])
-    move_set += sliding_positions(@position, board, [1,-1])
-    move_set += sliding_positions(@position, board, [1,1])
-    move_set
-  end
-
-  def sliding_positions(position, board, direction)
-    move_set = []
-    done = false
-    while !done
-      next_position = [@position[0] + direction[0], @position[1] + direction[1]]
-      break if board.out_of_bounds?(next_position)
-      if board.board[next_position[0]][next_position[1]].nil?
-        move_set << next_position 
-        @position = next_position
-      elsif board.occupied?(next_position) && !board.occupied_by_same_team?(next_position, @color)
-        move_set << next_position
-        done = true
-      else 
-        done = true
-      end
-    end
+    move_set += sliding_positions(board, [-1,0])
+    move_set += sliding_positions(board, [1,0])
+    move_set += sliding_positions(board, [0,-1])
+    move_set += sliding_positions(board, [0,1])
+    move_set += sliding_positions(board, [-1,-1])
+    move_set += sliding_positions(board, [-1,1])
+    move_set += sliding_positions(board, [1,-1])
+    move_set += sliding_positions(board, [1,1])
     move_set
   end
 end
