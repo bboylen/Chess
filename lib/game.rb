@@ -1,4 +1,5 @@
 require 'json'
+require 'yaml'
 class Game
   attr_accessor :board
 
@@ -18,7 +19,7 @@ class Game
     puts "White will begin, type LOAD to load the previous save"
     puts "Otherwise hit ENTER to begin"
     choice = gets.chomp
-    load_game if choice == "LOAD"
+    return load_game if choice == "LOAD"
     puts puts
     play_round
   end
@@ -47,7 +48,7 @@ class Game
       choice_string = gets.chomp
 
       if choice_string == "SAVE"
-        File.open("../saved_games/saved_game.txt", "w") {|save_file| save_file.puts to_json}
+        File.open("../saved_games/saved_game.yml", "w") {|save_file| save_file.puts YAML.dump(self)}
         puts "Game is saved"
       end
 
@@ -69,7 +70,7 @@ class Game
       choice_string = gets.chomp
 
       if choice_string == "SAVE"
-        File.open("../saved_games/saved_game.txt", "w") {|save_file| save_file.puts to_json}
+        File.open("../saved_games/saved_game.yml", "w") {|save_file| save_file.puts YAML.dump(self)}
         puts "Game is saved"
       end
 
@@ -103,32 +104,9 @@ class Game
     puts "Game over! #{@not_turn.team} is the winner!"
   end
 
-  def to_json
-    JSON.dump({
-      :board => @board.board,
-      :turn => @turn,
-      :turn_pieces => @turn.pieces,
-      :turn_team => @turn.team,
-      :not_turn => @not_turn,
-      :not_turn_pieces => @not_turn.pieces,
-      :not_turn_team => @not_turn.team
-    })
-  end
-
-  def from_json(string)
-    data = JSON.load string
-    @board.board = data['board']
-    @turn = data['turn']
-    binding.pry
-    @turn.pieces = data['turn_pieces']
-    @turn.team = data['turn_team']
-    @not_turn = data['not_turn']
-    @not_turn.pieces = data['not_turn_pieces']
-    @not_turn.team = data['not_turn_team']
-  end
-
   def load_game
-    File.open("../saved_games/saved_game.txt", "r") {|save_file| from_json(save_file)} 
+    game = File.open("../saved_games/saved_game.yml", "r") {|save_file| YAML.load(save_file)} 
+    game.play_round
   end
 
 end

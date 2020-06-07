@@ -62,21 +62,22 @@ private
     move_set = []
     if @color == "white"
       enemy_location = [@position[0] - 1, @position[1] - 1]
-      if board.board[enemy_location[0]][enemy_location[1]]
-        move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "black"
+      enemy_piece = board.board[enemy_location[0]][enemy_location[1]]
+      if enemy_piece
+        move_set += [enemy_location] if enemy_piece.color == "black"
       end
       enemy_location = [@position[0] - 1, @position[1] + 1]
-      if board.board[enemy_location[0]][enemy_location[1]]
-        move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "black"
+      if enemy_piece
+        move_set += [enemy_location] if enemy_piece.color == "black"
       end
     else
       enemy_location = [@position[0] + 1, @position[1] - 1]
-      if board.board[enemy_location[0]][enemy_location[1]]
-        move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "white"
+      if enemy_piece
+        move_set += [enemy_location] if enemy_piece.color == "white"
       end
       enemy_location = [@position[0] + 1, @position[1] + 1]
-      if board.board[enemy_location[0]][enemy_location[1]]
-        move_set += [enemy_location] if board.board[enemy_location[0]][enemy_location[1]].color == "white"
+      if enemy_piece
+        move_set += [enemy_location] if enemy_piece.color == "white"
       end
     end
     move_set
