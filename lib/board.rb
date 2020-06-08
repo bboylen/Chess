@@ -6,13 +6,10 @@ class Board
     @white = Player.new('white')
     @black = Player.new('black')
     assign_pieces(@white,@black)
-    @white_king = @white.pieces.select {|piece| piece.instance_of?(King)}
-    @black_king = @black.pieces.select {|piece| piece.instance_of?(King)}
     @column_hash = {"A" => 0, "B" => 1, "C" => 2, "D" => 3, 
       "E" => 4, "F" => 5, "G" => 6, "H" => 7}
     @row_hash = {"8" => 0, "7" => 1, "6" => 2, "5" => 3, 
       "4" => 4, "3" => 5, "2" => 6, "1" => 7}
-
   end
 
   def create_board
@@ -103,8 +100,7 @@ class Board
     false
   end
   
-  def check_mate?(king_position, current_player, enemy_player, board)
-    check_array = []
+  def check_mate?(current_player, enemy_player, board)
     current_player.pieces.each do |piece|
       piece.move_set(board).each do |end_position|
         test_board = Marshal.load(Marshal.dump(board))

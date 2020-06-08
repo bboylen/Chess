@@ -26,10 +26,9 @@ class Game
 
   def play_round
     @board.display
-    if board.check_mate?(@turn.king.position, @turn, @not_turn, @board)
+    if board.check_mate?(@turn, @not_turn, @board)
       return game_over
-    end
-    if board.check?(@turn.king.position, @not_turn.pieces)
+    elsif board.check?(@turn.king.position, @not_turn.pieces)
       puts
       puts "You are in check"
     end
@@ -101,6 +100,7 @@ class Game
   end
 
   def game_over
+    puts
     puts "Game over! #{@not_turn.team} is the winner!"
   end
 
