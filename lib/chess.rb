@@ -7,7 +7,15 @@ require_relative 'game.rb'
 
 board = Board.new
 game = Game.new(board)
+game.board.board[4][4] = game.board.board[6][4]
+game.board.board[4][4].position = [4,4]
+game.board.board[3][3] = game.board.board[1][3]
+game.board.board[3][3].position = [1,3]
+#binding.pry
 game.new
+
+#cant capture with pawn
+#cant capture piece that would otherwise put king in check
 
 
 

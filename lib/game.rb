@@ -1,5 +1,10 @@
 require 'json'
 require 'yaml'
+require_relative 'player.rb'
+require_relative 'board.rb'
+require_relative 'pieces.rb'
+require 'pry'
+
 class Game
   attr_accessor :board
 
@@ -11,7 +16,7 @@ class Game
     @not_turn.king = @not_turn.pieces.select {|piece| piece.instance_of?(King)}[0]
   end
 
-  def new
+  def new 
     puts 
     puts "Welcome, to move please enter the space containing the piece you wish to move (e.g. A4),"
     puts "hit ENTER, then choose the destination"
@@ -24,7 +29,7 @@ class Game
     play_round
   end
 
-  def play_round
+  def play_round 
     @board.display
     if board.check_mate?(@turn, @not_turn, @board)
       return game_over
@@ -45,33 +50,27 @@ class Game
       puts
       puts "Please select a #{@turn.team} piece."
       choice_string = gets.chomp
-
-      if choice_string == "SAVE"
-        File.open("../saved_games/saved_game.yml", "w") {|save_file| save_file.puts YAML.dump(self)}
-        puts "Game is saved"
-      end
+      save(choice_string)
 
       if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
         choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
         piece = @board.board[choice[0]][choice[1]]
-        choice_valid = true if piece.color == @turn.team && piece.move_set(board).empty? == false
+        if piece
+          choice_valid = true if piece.color == @turn.team && piece.move_set(board).empty? == false
+        end
       end
     end
     choice
   end
 
-  def choose_destination(piece_choice)
+  def choose_destination(piece_choice) 
     puts "Where do you want to move it?"
     choice_valid = false
     starting_king_position = @turn.king.position
     piece_moving = @board.board[piece_choice[0]][piece_choice[1]]
     while !choice_valid
       choice_string = gets.chomp
-
-      if choice_string == "SAVE"
-        File.open("../saved_games/saved_game.yml", "w") {|save_file| save_file.puts YAML.dump(self)}
-        puts "Game is saved"
-      end
+      save(choice_string)
 
       if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
         choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
@@ -99,9 +98,18 @@ class Game
     choice
   end
 
+  private
+
   def game_over
     puts
     puts "Game over! #{@not_turn.team} is the winner!"
+  end
+
+  def save(string)
+    if string == "SAVE"
+      File.open("../saved_games/saved_game.yml", "w") {|save_file| save_file.puts YAML.dump(self)}
+      puts "Game is saved"
+    end
   end
 
   def load_game

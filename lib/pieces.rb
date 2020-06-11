@@ -1,3 +1,6 @@
+require_relative 'board.rb'
+require 'pry'
+
 class Piece
   attr_accessor :moves_made, :symbol, :color, :position
   
@@ -8,8 +11,10 @@ class Piece
 end
 
 module Sliding_pieces
+  private
 
   def sliding_positions(board, direction)
+    #binding.pry
     move_set = []
     position = @position
     done = false
@@ -55,32 +60,27 @@ class Pawn < Piece
     move_set
   end
 
-private 
+private
 
   def pawn_capture(board)
     enemy_location = []
     move_set = []
     if @color == "white"
-      enemy_location = [@position[0] - 1, @position[1] - 1]
-      enemy_piece = board.board[enemy_location[0]][enemy_location[1]]
-      if enemy_piece
-        move_set += [enemy_location] if enemy_piece.color == "black"
-      end
-      enemy_location = [@position[0] - 1, @position[1] + 1]
-      if enemy_piece
-        move_set += [enemy_location] if enemy_piece.color == "black"
-      end
+      move_set += pawn_check([-1,-1],board) if pawn_check([-1,-1],board) !=nil
+      move_set += pawn_check([-1,1],board) if pawn_check([-1,1],board) !=nil
     else
-      enemy_location = [@position[0] + 1, @position[1] - 1]
-      if enemy_piece
-        move_set += [enemy_location] if enemy_piece.color == "white"
-      end
-      enemy_location = [@position[0] + 1, @position[1] + 1]
-      if enemy_piece
-        move_set += [enemy_location] if enemy_piece.color == "white"
-      end
+      move_set += pawn_check([1,-1],board) if pawn_check([1,-1],board) !=nil 
+      move_set += pawn_check([1,1],board) if pawn_check([1,1],board) !=nil
     end
     move_set
+  end
+
+  def pawn_check(direction, board)
+    enemy_location = [@position[0] + direction[0], @position[1] + direction[1]]
+      enemy_piece = board.board[enemy_location[0]][enemy_location[1]]
+      if enemy_piece
+        return [enemy_location] if enemy_piece.color == "black"
+      end
   end
 end
 
