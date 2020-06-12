@@ -1,6 +1,7 @@
 require_relative 'pieces.rb'
 require_relative 'player.rb'
 #require_relative 'game.rb'
+require 'pry'
 
 class Board 
   attr_accessor :board, :column_hash, :row_hash
@@ -10,6 +11,8 @@ class Board
     @white = Player.new('white')
     @black = Player.new('black')
     assign_pieces(@white,@black)
+    @white.king = @white.pieces.select {|piece| piece.instance_of?(King)}[0]
+    @black.king = @black.pieces.select {|piece| piece.instance_of?(King)}[0]
     @column_hash = {"A" => 0, "B" => 1, "C" => 2, "D" => 3, 
       "E" => 4, "F" => 5, "G" => 6, "H" => 7}
     @row_hash = {"8" => 0, "7" => 1, "6" => 2, "5" => 3, 
@@ -64,14 +67,15 @@ class Board
     false
   end
   
-  def check_mate?(current_player, enemy_player, board) 
+  def check_mate?(current_player, enemy_player) 
     current_player.pieces.each do |piece|
-      piece.move_set(board).each do |end_position|
-        test_board = Marshal.load(Marshal.dump(board))
+      piece.move_set(self).each do |end_position|
+        test_board = Marshal.load(Marshal.dump(self))
         test_current_player = Marshal.load(Marshal.dump(current_player.dup))
         test_board.board[end_position[0]][end_position[1]] = piece
         test_board.board[piece.position[0]][piece.position[1]] = nil
         test_current_player.king.position = [end_position[0],end_position[1]] if piece.instance_of?(King)
+        #cant use king method on test current player, that attribute only exists if you go through the game class
         return false if !test_board.check?(test_current_player.king.position, enemy_player.pieces)
       end
     end

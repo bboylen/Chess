@@ -78,8 +78,10 @@ private
   def pawn_check(direction, board)
     enemy_location = [@position[0] + direction[0], @position[1] + direction[1]]
       enemy_piece = board.board[enemy_location[0]][enemy_location[1]]
-      if enemy_piece
+      if enemy_piece && @color == "white"
         return [enemy_location] if enemy_piece.color == "black"
+      elsif enemy_piece && @color == "black"
+        return [enemy_location] if enemy_piece.color == "white"
       end
   end
 end

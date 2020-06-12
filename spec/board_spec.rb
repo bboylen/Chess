@@ -1,7 +1,7 @@
 require './lib/board.rb'
 
 describe Board do
-    describe '#initialize'
+  describe '#initialize'
 
     it 'Creates an 8x8 board' do
       expect(subject.board[0].length).to eql(8)
@@ -76,12 +76,14 @@ describe Board do
 
   describe '#check_mate?'
     it 'Returns true if the input king is in check' do
-      expect(subject.check?([0,4], subject.white.pieces)).to eql(false)
+      expect(subject.check_mate?(subject.white, subject.black)).to eql(false)
       board = Board.new
       board.board[4][3] = board.board[7][4] 
       board.board[7][4].position = [4,3]
-      board.board[4][5] = board.board[0][3] 
-      board.board[0][3].position = [4,5]
-      expect(board.check?([4,3], board.black.pieces)).to eql(true)
+      board.board[4][4] = board.board[0][3] 
+      board.board[0][3].position = [4,4]
+      board.board[4][2] = board.board[0][0] 
+      board.board[0][0].position = [4,2]
+      expect(subject.check_mate?(board.white, board.black)).to eql(true)
     end
 end

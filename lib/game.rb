@@ -12,8 +12,6 @@ class Game
     @board = board
     @turn = board.white
     @not_turn = board.black
-    @turn.king = @turn.pieces.select {|piece| piece.instance_of?(King)}[0]
-    @not_turn.king = @not_turn.pieces.select {|piece| piece.instance_of?(King)}[0]
   end
 
   def new 
@@ -31,9 +29,9 @@ class Game
 
   def play_round 
     @board.display
-    if board.check_mate?(@turn, @not_turn, @board)
+    if @board.check_mate?(@turn, @not_turn)
       return game_over
-    elsif board.check?(@turn.king.position, @not_turn.pieces)
+    elsif @board.check?(@turn.king.position, @not_turn.pieces)
       puts
       puts "You are in check"
     end
