@@ -14,7 +14,6 @@ game.board.board[3][3].position = [1,3]
 #binding.pry
 game.new
 
-#cant capture with pawn
 #cant capture piece that would otherwise put king in check
 
 

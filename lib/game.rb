@@ -1,4 +1,4 @@
-require 'json'
+
 require 'yaml'
 require_relative 'player.rb'
 require_relative 'board.rb'
@@ -21,8 +21,8 @@ class Game
     puts "Type 'SAVE' at any time to save the game"
     puts "White will begin, type LOAD to load the previous save"
     puts "Otherwise hit ENTER to begin"
-    choice = gets.chomp
-    return load_game if choice == "LOAD"
+    #choice = gets.chomp
+    return load_game if get_response == "LOAD"
     puts puts
     play_round
   end
@@ -47,7 +47,7 @@ class Game
     while !choice_valid
       puts
       puts "Please select a #{@turn.team} piece."
-      choice_string = gets.chomp
+      choice_string = get_response
       save(choice_string)
 
       if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
@@ -67,7 +67,7 @@ class Game
     starting_king_position = @turn.king.position
     piece_moving = @board.board[piece_choice[0]][piece_choice[1]]
     while !choice_valid
-      choice_string = gets.chomp
+      choice_string = get_response
       save(choice_string)
 
       if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
@@ -97,6 +97,10 @@ class Game
   end
 
   private
+
+  def get_response
+    gets.chomp
+  end
 
   def game_over
     puts

@@ -47,6 +47,7 @@ describe Rook do
     board.board[2][4] = board.board[7][0]
     expect(rook.move_set(board).include?([2,4])).to eql(true)
     expect(rook.move_set(board).include?([6,2])).to eql(true)
+    expect(rook.move_set(board).include?([2,1])).to eql(true)
   end
 end
 
@@ -62,8 +63,8 @@ describe Bishop do
     bishop.position = [2,2]
     expect(bishop.move_set(board).include?([6,6])).to eql(true)
     expect(bishop.move_set(board).include?([4,0])).to eql(true)
-    board.board[3][1] = board.board[1][3]
-    expect(bishop.move_set(board).include?([4,0])).to eql(false)
+    expect(bishop.move_set(board).include?([2,3])).to eql(false)
+    expect(bishop.move_set(board).include?([3,2])).to eql(false)
   end
 end
 
@@ -95,13 +96,15 @@ describe Knight do
     knight = board.board[0][1]
     board.board[4][4] = board.board[0][1]
     knight.position = [4,4]
-    board.board[2][4] = board.board[7][0]
     expect(knight.move_set(board).include?([6,3])).to eql(true)
     expect(knight.move_set(board).include?([6,5])).to eql(true)
     expect(knight.move_set(board).include?([5,6])).to eql(true)
     expect(knight.move_set(board).include?([3,6])).to eql(true)
     expect(knight.move_set(board).include?([5,2])).to eql(true)
     expect(knight.move_set(board).include?([3,2])).to eql(true)
+    expect(knight.move_set(board).include?([2,3])).to eql(true)
+    expect(knight.move_set(board).include?([2,5])).to eql(true)
+    expect(knight.move_set(board).include?([5,5])).to eql(false)
   end
 end
 
