@@ -1,4 +1,3 @@
-
 require 'yaml'
 require_relative 'player.rb'
 require_relative 'board.rb'
@@ -19,9 +18,8 @@ class Game
     puts "Welcome, to move please enter the space containing the piece you wish to move (e.g. A4),"
     puts "hit ENTER, then choose the destination"
     puts "Type 'SAVE' at any time to save the game"
-    puts "White will begin, type LOAD to load the previous save"
-    puts "Otherwise hit ENTER to begin"
-    #choice = gets.chomp
+    puts "Type LOAD to load the previous save"
+    puts "Otherwise hit ENTER and White will begin"
     return load_game if get_response == "LOAD"
     puts puts
     play_round
@@ -40,25 +38,6 @@ class Game
     puts puts 
     @turn, @not_turn = @not_turn, @turn
     play_round
-  end
-
-  def choose_piece
-    choice_valid = false
-    while !choice_valid
-      puts
-      puts "Please select a #{@turn.team} piece."
-      choice_string = get_response
-      save(choice_string)
-
-      if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
-        choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
-        piece = @board.board[choice[0]][choice[1]]
-        if piece
-          choice_valid = true if piece.color == @turn.team && piece.move_set(board).empty? == false
-        end
-      end
-    end
-    choice
   end
 
   def choose_destination(piece_choice) 
@@ -98,8 +77,27 @@ class Game
 
   private
 
-  def get_response
-    gets.chomp
+  def choose_piece
+    choice_valid = false
+    while !choice_valid
+      puts
+      puts "Please select a #{@turn.team} piece."
+      choice_string = get_response
+      save(choice_string)
+
+      if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
+        choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
+        piece = @board.board[choice[0]][choice[1]]
+        if piece
+          choice_valid = true if piece.color == @turn.team && piece.move_set(board).empty? == false
+        end
+      end
+    end
+    choice
+  end
+
+  def get_response(response = gets.chomp)
+    response
   end
 
   def game_over

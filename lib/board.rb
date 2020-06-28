@@ -75,7 +75,6 @@ class Board
         test_board.board[end_position[0]][end_position[1]] = piece
         test_board.board[piece.position[0]][piece.position[1]] = nil
         test_current_player.king.position = [end_position[0],end_position[1]] if piece.instance_of?(King)
-        #cant use king method on test current player, that attribute only exists if you go through the game class
         return false if !test_board.check?(test_current_player.king.position, enemy_player.pieces)
       end
     end
