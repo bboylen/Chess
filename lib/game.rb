@@ -33,13 +33,31 @@ class Game
       puts
       puts "You are in check"
     end
-    piece_choice = choose_piece
-    piece_destination = choose_destination(piece_choice)
+    choose_destination(choose_piece)
     puts puts 
     @turn, @not_turn = @not_turn, @turn
     play_round
   end
 
+  def choose_piece
+    choice_valid = false
+    while !choice_valid
+      puts
+      puts "Please select a #{@turn.team} piece."
+      choice_string = get_response
+      save(choice_string)
+
+      if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
+        choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
+        piece = @board.board[choice[0]][choice[1]]
+        if piece
+          choice_valid = true if piece.color == @turn.team && piece.move_set(board).empty? == false
+        end
+      end
+    end
+    choice
+  end
+  
   def choose_destination(piece_choice) 
     puts "Where do you want to move it?"
     choice_valid = false
@@ -76,25 +94,6 @@ class Game
   end
 
   private
-
-  def choose_piece
-    choice_valid = false
-    while !choice_valid
-      puts
-      puts "Please select a #{@turn.team} piece."
-      choice_string = get_response
-      save(choice_string)
-
-      if @board.row_hash.has_key?(choice_string[1]) && @board.column_hash.has_key?(choice_string[0])
-        choice = [@board.row_hash[choice_string[1]], @board.column_hash[choice_string[0]]]
-        piece = @board.board[choice[0]][choice[1]]
-        if piece
-          choice_valid = true if piece.color == @turn.team && piece.move_set(board).empty? == false
-        end
-      end
-    end
-    choice
-  end
 
   def get_response(response = gets.chomp)
     response
