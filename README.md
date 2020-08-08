@@ -15,11 +15,11 @@ Final project of the Ruby section of The Odin Project (https://www.theodinprojec
 
 ##### Start Screen
 
-![Screenshot_2020-08-08_12-33-28](https://user-images.githubusercontent.com/52515015/89716673-9eb02880-d974-11ea-9c61-828988955c99.png)
+![Screenshot_2020-08-08_12-35-17](https://user-images.githubusercontent.com/52515015/89716733-1d0cca80-d975-11ea-80ba-6a10d7d7f50c.png)
 
 
 ##### Gameplay
 
-![Screenshot_2020-08-08_12-29-55](https://user-images.githubusercontent.com/52515015/89716632-3103fc80-d974-11ea-9a72-4a14a92720c5.png)
+![new](https://user-images.githubusercontent.com/52515015/89716725-08c8cd80-d975-11ea-94ec-ce95b9b9c9f0.png)
 
 
