@@ -13,5 +13,13 @@ Final project of the Ruby section of The Odin Project (https://www.theodinprojec
 
 ## Screenshot 
 
-![chess_screenshot](https://user-images.githubusercontent.com/52515015/89716590-d5d20a00-d973-11ea-8dfc-35f3f9c1bde5.png)
+##### Start Screen
+
+![Screenshot_2020-08-08_12-33-28](https://user-images.githubusercontent.com/52515015/89716673-9eb02880-d974-11ea-9c61-828988955c99.png)
+
+
+##### Gameplay
+
+![Screenshot_2020-08-08_12-29-55](https://user-images.githubusercontent.com/52515015/89716632-3103fc80-d974-11ea-9a72-4a14a92720c5.png)
+
 
