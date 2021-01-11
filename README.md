@@ -1,6 +1,6 @@
 # Chess
 
-Command line Chess game written in Ruby. 
+Command line Chess game developed in Ruby.
 
 Final project of the Ruby section of The Odin Project (https://www.theodinproject.com/courses/ruby-programming/lessons/ruby-final-project).
 
@@ -9,7 +9,7 @@ Final project of the Ruby section of The Odin Project (https://www.theodinprojec
 - User can play against himself or a friend
 - Moves are manually selected by user, invalid moves cause the user to be prompted to choose again
 - Player can save the game at any point, and load a previous game at the start of a new game
-- Test coverage with Rspec
+- Full test coverage with Rspec
 
 ## Screenshots 
 
